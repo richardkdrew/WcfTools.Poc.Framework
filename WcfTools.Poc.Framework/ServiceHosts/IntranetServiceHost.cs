@@ -21,7 +21,7 @@ namespace WcfTools.Poc.Framework.ServiceHosts
         }
 
         /// <summary>
-        ///     Override the OnOpening command and validate any queues based on whehter there's an propriate endpoint associated
+        ///     Override the OnOpening handler and validate any queues based on whether there's an apropriate endpoint associated
         ///     with the service host
         /// </summary>
         protected override void OnOpening()
