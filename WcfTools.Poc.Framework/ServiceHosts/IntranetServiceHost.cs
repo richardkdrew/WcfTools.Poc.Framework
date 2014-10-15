@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
@@ -15,7 +16,7 @@ namespace WcfTools.Poc.Framework.ServiceHosts
     public class IntranetServiceHost : CustomServiceHostBase
     {
         public IntranetServiceHost(Type serviceType)
-            : base(serviceType, new[] {AddressHelper.Intranet.BaseAddress()})
+            : base(serviceType, new[] {AddressHelper.Intranet.BaseAddress(), AddressHelper.Queue.BaseAddress()})
         {
             ApplyIntranetEndpoints();
         }
@@ -57,7 +58,7 @@ namespace WcfTools.Poc.Framework.ServiceHosts
         ///     Method used to apply the default endpoints for the contracts associated with an intranet based service host
         /// </summary>
         private void ApplyIntranetEndpoints()
-        {
+        {          
             if (Description.Endpoints.Any(x => x.Binding is NetTcpBinding)) return;
             ApplyEndpoints();
         }
@@ -70,7 +71,8 @@ namespace WcfTools.Poc.Framework.ServiceHosts
         {
             if (GetContracts().Any(x => x == contractType))
             {
-                AddServiceEndpoint(contractType, QueueBinding(), EnforceQueueEndpointAddress(contractType));
+                string address = EnforceQueueEndpointAddress(contractType);
+                AddServiceEndpoint(contractType, QueueBinding(), address);
             }
             else
                 throw new Exception(string.Format("The supplied contract was not implemented by the this service: {0}",
@@ -91,7 +93,10 @@ namespace WcfTools.Poc.Framework.ServiceHosts
         ///     Method used to ensure that the endpoint address matches the desired (custom) convention
         /// </summary>
         /// <param name="contractType">The contract to be used as part of the convention based check</param>
-        /// <returns>A string based endpoint address that corresponds with the convention used for an queue endpoint for an intranet based service host</returns>
+        /// <returns>
+        ///     A string based endpoint address that corresponds with the convention used for an queue endpoint for an
+        ///     intranet based service host
+        /// </returns>
         public static string EnforceQueueEndpointAddress(Type contractType)
         {
             return contractType.Name;
