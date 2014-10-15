@@ -186,6 +186,109 @@ namespace WcfTools.Poc.Framework.Helpers.Binding
         }
 
         /// <summary>
+        ///     Class used to set the defaults for an intranet based (named pipe) endpoint binding
+        /// </summary>
+        public static class InProc
+        {
+            private const string DefaultBindingName = "DefaultInProc";
+
+            private static NetNamedPipeBinding _defaultBinding;
+
+            /// <summary>
+            /// Method used to retrieve a named pipe binding pre-configured with some default values
+            /// </summary>
+            /// <returns>A valid (configured named pipe) binding</returns>
+            private static NetNamedPipeBinding DefaultBinding()
+            {
+                return new NetNamedPipeBinding()
+                {
+                    Name = DefaultBindingName,
+                    Namespace = Namespace,
+                    MaxBufferSize = DefaultMaxBufferSize,
+                    MaxReceivedMessageSize = DefaultMaxReceivedMessageSize,
+                    ReaderQuotas = new XmlDictionaryReaderQuotas
+                    {
+                        MaxArrayLength = DefaultMaxArrayLength,
+                        MaxBytesPerRead = DefaultMaxBytesPerRead,
+                        MaxDepth = DefaultMaxDepth,
+                        MaxNameTableCharCount = DefaultMaxNameTableCharCount,
+                        MaxStringContentLength = DefaultMaxStringContentLength
+                    },
+                    CloseTimeout = DefaultCloseTimeout,
+                    OpenTimeout = DefaultOpenTimeout,
+                    ReceiveTimeout = DefaultReceiveTimeout
+                };
+            }
+
+            /// <summary>
+            ///     Method used to set the binding
+            /// </summary>
+            /// <param name="binding">The binding to set</param>
+            public static void SetBinding(NetNamedPipeBinding binding)
+            {
+                _defaultBinding = binding;
+            }
+
+            /// <summary>
+            ///     Method used to get the binding, check the config for a configuration setting for the binding, checks what it finds
+            ///     against some custom policies (EnforceBindingPolicies) and substitutes with a default binding if there is no config.
+            /// </summary>
+            /// <returns>A valid (configured named pipe) binding</returns>
+            public static System.ServiceModel.Channels.Binding Binding()
+            {
+                if (_defaultBinding != null) return _defaultBinding;
+                try
+                {
+                    _defaultBinding = new NetNamedPipeBinding(DefaultBindingName);
+                }
+                catch
+                {
+                    _defaultBinding = DefaultBinding();
+                }
+
+                EnforceBindingPolicies(_defaultBinding);
+                return _defaultBinding;
+            }
+
+            /// <summary>
+            /// Method used to check that any named pipe binding being used complies with a set of custom policies
+            /// </summary>
+            /// <param name="binding">The binding to check</param>
+            public static void EnforceBindingPolicies(NetNamedPipeBinding binding)
+            {
+                if (binding.OpenTimeout > DefaultOpenTimeout)
+                    throw new Exception(string.Format(BrokenBindingPolicyMessage, "OpenTimeout"));
+
+                if (binding.CloseTimeout > DefaultCloseTimeout)
+                    throw new Exception(string.Format(BrokenBindingPolicyMessage, "CloseTimeout"));
+
+                if (binding.ReceiveTimeout > DefaultReceiveTimeout)
+                    throw new Exception(string.Format(BrokenBindingPolicyMessage, "ReceiveTimeout"));
+
+                if (binding.MaxBufferSize > DefaultMaxBufferSize)
+                    throw new Exception(string.Format(BrokenBindingPolicyMessage, "MaxBufferSize"));
+
+                if (binding.MaxReceivedMessageSize > DefaultMaxReceivedMessageSize)
+                    throw new Exception(string.Format(BrokenBindingPolicyMessage, "MaxReceivedMessageSize"));
+
+                if (binding.ReaderQuotas.MaxStringContentLength > DefaultMaxStringContentLength)
+                    throw new Exception(string.Format(BrokenBindingPolicyMessage, "MaxStringContentLength"));
+
+                if (binding.ReaderQuotas.MaxArrayLength > DefaultMaxArrayLength)
+                    throw new Exception(string.Format(BrokenBindingPolicyMessage, "MaxArrayLength"));
+
+                if (binding.ReaderQuotas.MaxBytesPerRead > DefaultMaxBytesPerRead)
+                    throw new Exception(string.Format(BrokenBindingPolicyMessage, "MaxBytesPerRead"));
+
+                if (binding.ReaderQuotas.MaxDepth > DefaultMaxDepth)
+                    throw new Exception(string.Format(BrokenBindingPolicyMessage, "MaxDepth"));
+
+                if (binding.ReaderQuotas.MaxNameTableCharCount > DefaultMaxNameTableCharCount)
+                    throw new Exception(string.Format(BrokenBindingPolicyMessage, "MaxNameTableCharCount"));
+            }
+        }
+
+        /// <summary>
         ///     Class used to set the defaults for an queue based (MSMQ) endpoint binding
         /// </summary>
         public static class Queue

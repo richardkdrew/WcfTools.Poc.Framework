@@ -29,6 +29,12 @@ namespace WcfTools.Poc.Framework.ServiceHosts
         protected abstract string EnforceEndpointAddress(Type contractType);
 
         /// <summary>
+        ///     Abstract method allowing derived types to specify their own default binding
+        /// </summary>
+        /// <returns>A valid binding (pre-configured based on the rules described in the BindingHelper)</returns>
+        protected abstract Binding DefaultBinding();
+
+        /// <summary>
         ///     Method used to ensure a metadata behavior is present
         /// </summary>
         private void EnforceMetadataBehavior()
@@ -62,6 +68,18 @@ namespace WcfTools.Poc.Framework.ServiceHosts
                     }
                 }
                 if (binding != null) AddServiceEndpoint(typeof (IMetadataExchange), binding, "MEX");
+            }
+        }
+
+        /// <summary>
+        ///     Method used to apply endpoints for all service contracts implemented by the derived service (based on the default
+        ///     binding and the EnforcedEndpointAddress)
+        /// </summary>
+        protected void ApplyEndpoints()
+        {
+            foreach (Type contractType in GetContracts())
+            {
+                AddServiceEndpoint(contractType, DefaultBinding(), EnforceEndpointAddress(contractType));
             }
         }
 

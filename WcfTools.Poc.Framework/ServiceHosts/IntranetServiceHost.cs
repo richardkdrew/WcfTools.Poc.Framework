@@ -39,7 +39,7 @@ namespace WcfTools.Poc.Framework.ServiceHosts
         ///     Method used to retrieve the default binding for an intranet based service host
         /// </summary>
         /// <returns>A valid binding (pre-configured based on the rules described in the BindingHelper)</returns>
-        protected Binding DefaultBinding()
+        protected override Binding DefaultBinding()
         {
             return BindingHelper.Intranet.Binding();
         }
@@ -59,17 +59,14 @@ namespace WcfTools.Poc.Framework.ServiceHosts
         private void ApplyIntranetEndpoints()
         {
             if (Description.Endpoints.Any(x => x.Binding is NetTcpBinding)) return;
-            foreach (Type contractType in GetContracts())
-            {
-                AddServiceEndpoint(contractType, DefaultBinding(), EnforceEndpointAddress(contractType));
-            }
+            ApplyEndpoints();
         }
 
         /// <summary>
         ///     Method used to allow a queued endpoint to be added for a given contract
         /// </summary>
         /// <param name="contractType">The contract type to add the queued endpoint for</param>
-        public void AddQueuedEndpoint(Type contractType)
+        public void AddQueueEndpoint(Type contractType)
         {
             if (GetContracts().Any(x => x == contractType))
             {

@@ -9,20 +9,22 @@ namespace WcfTools.Poc.Framework.Helpers.Address
         {
             public static Uri BaseAddress()
             {
-                return new Uri(string.Format("net.tcp://{0}:{1}/", ConfigurationHelper.GetHostName(),
-                    ConfigurationHelper.GetHostPort()));
+                return BaseAddress(ConfigurationHelper.GetHostName(),
+                    int.Parse(ConfigurationHelper.GetHostPort()));
             }
 
             public static Uri BaseAddress(string host, int port)
             {
                 return new Uri(string.Format("net.tcp://{0}:{1}/", host, port));
             }
+        }
 
-            //public static Uri Address<T>(string host, int port) where T : class
-            //{
-            //    string name = typeof (T).FullName.Replace("Contracts", "Services");
-            //    return new Uri(string.Format("{0}{1}", BaseAddress(host, port), name));
-            //}
+        public static class InProc
+        {
+            public static Uri BaseAddress()
+            {
+                return new Uri("net.pipe://localhost/");
+            }
         }
 
         public static class Queue

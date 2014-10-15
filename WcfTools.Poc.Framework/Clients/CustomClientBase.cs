@@ -16,14 +16,9 @@ namespace WcfTools.Poc.Framework.Clients
         protected abstract Binding Binding();
         protected abstract EndpointAddress EnforceEndpointAddress(Uri baseAddress);
 
-        protected virtual EndpointAddress CreateAddress(Uri baseAddress)
-        {
-            return EnforceEndpointAddress(baseAddress);
-        }
-
         private ChannelFactory<T> CreateFactory(Uri baseAddress)
         {
-            return new ChannelFactory<T>(Binding(), CreateAddress(baseAddress));
+            return new ChannelFactory<T>(Binding(), EnforceEndpointAddress(baseAddress));
         }
 
         public void CallService(Action<T> action)

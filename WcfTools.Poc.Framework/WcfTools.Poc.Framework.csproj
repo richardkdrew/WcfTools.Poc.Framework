@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Behaviors\CustomServiceBehavior.cs" />
     <Compile Include="Clients\CustomClientBase.cs" />
+    <Compile Include="Clients\InProcClient.cs" />
     <Compile Include="Clients\IntranetClient.cs" />
     <Compile Include="Clients\QueueClient.cs" />
     <Compile Include="Helpers\Address\AddressHelper.cs" />
@@ -54,6 +55,7 @@
     <Compile Include="Helpers\Queue\QueueHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceHosts\CustomServiceHostBase.cs" />
+    <Compile Include="ServiceHosts\InProcServiceHost.cs" />
     <Compile Include="ServiceHosts\IntranetServiceHost.cs" />
     <Compile Include="Utilities.cs" />
   </ItemGroup>
