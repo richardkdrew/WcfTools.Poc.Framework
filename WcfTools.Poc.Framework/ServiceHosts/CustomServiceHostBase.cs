@@ -12,7 +12,7 @@ namespace WcfTools.Poc.Framework.ServiceHosts
     ///     Custom service host class used as a base to provide a method for quickly creating service instances pre-configured
     ///     with endpoints, behaviors, etc...
     /// </summary>
-    [CustomServiceBehavior]
+    [IntranetServiceBehavior]
     public abstract class CustomServiceHostBase : ServiceHost
     {
         protected CustomServiceHostBase(Type serviceType, Uri[] baseAddresses)

@@ -4,7 +4,7 @@ using System.ServiceModel.Channels;
 
 namespace WcfTools.Poc.Framework.Clients
 {
-    public abstract class CustomClientBase<T> where T : class
+    public abstract class CustomClientBase<T> : IDisposable where T : class
     {
         private readonly T _channel;
 
@@ -63,6 +63,11 @@ namespace WcfTools.Poc.Framework.Clients
                 if (_channel != null && ((IClientChannel) _channel).State != CommunicationState.Faulted)
                     ((IClientChannel) _channel).Close();
             }
+        }
+
+        public void Dispose()
+        {
+            CleanUpChannelResources(true);
         }
     }
 }

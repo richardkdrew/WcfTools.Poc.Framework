@@ -43,7 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Behaviors\CustomServiceBehavior.cs" />
+    <Compile Include="Behaviors\IntranetServiceBehavior.cs" />
     <Compile Include="Clients\CustomClientBase.cs" />
     <Compile Include="Clients\InProcClient.cs" />
     <Compile Include="Clients\IntranetClient.cs" />

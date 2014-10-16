@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
+using WcfTools.Poc.Framework.Helpers.Address;
 using WcfTools.Poc.Framework.Helpers.Binding;
 using WcfTools.Poc.Framework.ServiceHosts;
 
@@ -12,11 +13,9 @@ namespace WcfTools.Poc.Framework.Clients
         private Guid _id;
         private InProcServiceHost _serviceHost;
 
-
-        public InProcClient(Uri baseAddress)
-            : base(baseAddress)
+        public InProcClient() : base(AddressHelper.InProc.BaseAddress())
         {
-            StartService(baseAddress);
+            StartService(AddressHelper.InProc.BaseAddress());
         }
 
         protected override Binding Binding()
@@ -33,7 +32,7 @@ namespace WcfTools.Poc.Framework.Clients
 
         private void StartService(Uri baseAddress)
         {
-            _serviceHost = new InProcServiceHost(typeof(TImplementation), new[] { baseAddress },
+            _serviceHost = new InProcServiceHost(typeof (TImplementation), new[] {baseAddress},
                 _id);
 
             _serviceHost.Open();

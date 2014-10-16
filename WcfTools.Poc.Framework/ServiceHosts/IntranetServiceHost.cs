@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
@@ -58,7 +57,7 @@ namespace WcfTools.Poc.Framework.ServiceHosts
         ///     Method used to apply the default endpoints for the contracts associated with an intranet based service host
         /// </summary>
         private void ApplyIntranetEndpoints()
-        {          
+        {
             if (Description.Endpoints.Any(x => x.Binding is NetTcpBinding)) return;
             ApplyEndpoints();
         }
