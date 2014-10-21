@@ -11,11 +11,8 @@ namespace WcfTools.Poc.Framework.ServiceHosts
     /// </summary>
     public class InProcServiceHost : CustomServiceHostBase
     {
-        private readonly Guid _id;
-
-        public InProcServiceHost(Type serviceType, Uri[] baseAddresses, Guid id) : base(serviceType, baseAddresses)
+        public InProcServiceHost(Type serviceType, Uri[] baseAddresses) : base(serviceType, baseAddresses)
         {
-            _id = id;
             ApplyInProcEndpoints();
         }
 
@@ -44,7 +41,7 @@ namespace WcfTools.Poc.Framework.ServiceHosts
         /// <returns>A string based endpoint address that corresponds with the convention used for an in process based service host</returns>
         protected override string EnforceEndpointAddress(Type contractType)
         {
-            return string.Format("{0}/{1}", _id, contractType.Name);
+            return contractType.Name;
         }
     }
 }

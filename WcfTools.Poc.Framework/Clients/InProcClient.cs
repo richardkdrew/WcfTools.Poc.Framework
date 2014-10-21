@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
-using WcfTools.Poc.Framework.Helpers.Address;
 using WcfTools.Poc.Framework.Helpers.Binding;
 using WcfTools.Poc.Framework.ServiceHosts;
 
@@ -10,12 +9,12 @@ namespace WcfTools.Poc.Framework.Clients
     public class InProcClient<TImplementation, TInterface> : CustomClientBase<TInterface> where TImplementation : class
         where TInterface : class
     {
-        private Guid _id;
         private InProcServiceHost _serviceHost;
 
-        public InProcClient() : base(AddressHelper.InProc.BaseAddress())
+        public InProcClient(Guid id)
+            : base(new Uri("net.pipe://localhost/" + id))
         {
-            StartService(AddressHelper.InProc.BaseAddress());
+            StartService(new Uri("net.pipe://localhost/" + id));
         }
 
         protected override Binding Binding()
@@ -25,16 +24,13 @@ namespace WcfTools.Poc.Framework.Clients
 
         protected override EndpointAddress EnforceEndpointAddress(Uri baseAddress)
         {
-            _id = Guid.NewGuid();
             string serviceName = typeof (TInterface).Name;
-            return new EndpointAddress(string.Format("{0}{1}/{2}", baseAddress, _id, serviceName));
+            return new EndpointAddress(string.Format("{0}/{1}", baseAddress, serviceName));
         }
 
         private void StartService(Uri baseAddress)
         {
-            _serviceHost = new InProcServiceHost(typeof (TImplementation), new[] {baseAddress},
-                _id);
-
+            _serviceHost = new InProcServiceHost(typeof (TImplementation), new[] {baseAddress});
             _serviceHost.Open();
         }
 
